@@ -1,5 +1,3 @@
-// ui.js
-
 import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from '../store/store';
@@ -103,6 +101,11 @@ export const PipelineUI = () => {
 		event.dataTransfer.dropEffect = 'move';
 	}, []);
 
+	const isValidConnection = (connection) => {
+		console.log('Attempting connection:', connection);
+		return true;
+	};
+
 	return (
 		<>
 			<div
@@ -122,6 +125,7 @@ export const PipelineUI = () => {
 					proOptions={proOptions}
 					snapGrid={[gridSize, gridSize]}
 					connectionLineType='smoothstep'
+					isValidConnection={isValidConnection}
 				>
 					<Background color='#aaa' gap={gridSize} />
 					<Controls />

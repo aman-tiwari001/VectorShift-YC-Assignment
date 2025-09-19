@@ -1,18 +1,20 @@
-// submit.js
 import { FiGitPullRequest } from 'react-icons/fi';
+import { MdClear } from 'react-icons/md';
 import { useStore } from '../store/store';
 import { shallow } from 'zustand/shallow';
 import Alert from './alert';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 // Zustand state selector to get nodes and edges
 const selector = (state) => ({
 	nodes: state.nodes,
 	edges: state.edges,
+	clearCanvas: state.clearCanvas,
 });
 
 export const SubmitButton = () => {
-	const { nodes, edges } = useStore(selector, shallow);
+	const { nodes, edges, clearCanvas } = useStore(selector, shallow);
 	const [showAlert, setShowAlert] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [alertContent, setAlertContent] = useState({
@@ -23,6 +25,12 @@ export const SubmitButton = () => {
 
 	const handleSubmit = async () => {
 		try {
+			if (nodes.length === 0 || edges.length === 0) {
+				toast.error(
+					'Cannot submit an empty pipeline! Please add nodes.'
+				);
+				return;
+			}
 			setLoading(true);
 			// Formatted pipeline data to be sent to backend
 			const pipelineData = {
@@ -57,6 +65,7 @@ export const SubmitButton = () => {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
+			toast.success('Pipeline submitted!');
 			const result = await response.json();
 
 			setAlertContent({
@@ -67,22 +76,48 @@ export const SubmitButton = () => {
 			setShowAlert(true);
 		} catch (error) {
 			console.error('Error submitting pipeline:', error);
-			alert(`Error submitting pipeline: ${error.message}`);
+			toast.error(`Error submitting pipeline: ${error.message}`);
 		} finally {
 			setLoading(false);
 		}
 	};
 
+	const handleClear = () => {
+		if (nodes.length === 0 && edges.length === 0) {
+			toast.error('Canvas is already empty!');
+			return;
+		}
+
+		const confirmClear = window.confirm(
+			`Are you sure you want to clear the entire canvas?`
+		);
+
+		if (confirmClear) {
+			clearCanvas();
+		}
+	};
+
 	return (
 		<div className='flex flex-col items-center'>
-			<button
-				type='button'
-				onClick={handleSubmit}
-				className='flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold px-4 py-1 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300'
-			>
-				<span>Submit Pipeline</span>
-				<FiGitPullRequest className='text-xl' />
-			</button>
+			<div className='flex gap-3'>
+				<button
+					type='button'
+					onClick={handleClear}
+					className='flex items-center gap-1 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold px-4 py-1 rounded-full shadow-lg hover:from-red-600 hover:to-red-800 transition-all duration-300'
+					title='Clear entire canvas'
+				>
+					<MdClear className='text-xl' />
+					<span>Clear Canvas</span>
+				</button>
+				<button
+					type='button'
+					onClick={handleSubmit}
+					className='flex items-center gap-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold px-4 py-1 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300'
+				>
+					<FiGitPullRequest className='text-xl' />
+					<span>Submit Pipeline</span>
+				</button>
+			</div>
 			{loading ? (
 				<Alert>
 					<img

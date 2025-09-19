@@ -1,14 +1,21 @@
 import RootNode from './rootNode';
 import NodeFields from './nodeFields';
 import { nodeConfig } from '../config/nodeConfig';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useUpdateNodeInternals } from 'reactflow';
 
 const AbstractNode = ({ id, data, type }) => {
 	const config = nodeConfig[type];
+	const updateNodeInternals = useUpdateNodeInternals();
 
 	const [handles, setHandles] = useState(
 		config?.handles || { inputs: [], outputs: [] }
 	);
+
+	useEffect(() => {
+		// Notify React Flow that the node handles have changed
+		updateNodeInternals(id);
+	}, [handles, id, updateNodeInternals]);
 
 	if (!config) {
 		return (
@@ -31,6 +38,7 @@ const AbstractNode = ({ id, data, type }) => {
 				nodeId={id}
 				fields={config.fields}
 				data={data}
+				type={type}
 				setHandles={setHandles}
 			/>
 		</RootNode>

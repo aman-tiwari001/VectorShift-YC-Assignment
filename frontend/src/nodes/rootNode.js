@@ -1,7 +1,8 @@
-import { Tooltip } from 'react-tooltip'
+import { Tooltip } from 'react-tooltip';
 import { Handle, Position } from 'reactflow';
 import { nodeConfig } from '../config/nodeConfig';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
+import { useStore } from '../store/store';
 
 const RootNode = ({
 	id,
@@ -15,6 +16,12 @@ const RootNode = ({
 	className = '',
 }) => {
 	const Icon = nodeConfig[type]?.icon || null;
+	const deleteNode = useStore((state) => state.deleteNode);
+
+	const handleDelete = (e) => {
+		e.stopPropagation();
+		deleteNode(id);
+	};
 
 	const getHandlePosition = (index, total) => {
 		if (total === 1) return '50%';
@@ -28,21 +35,26 @@ const RootNode = ({
 		>
 			{/* Input Handles */}
 			{handles.inputs.map((input, index) => (
-				<>
+				<div key={`input-${index}`}>
 					<Tooltip id={`handle-tooltip-${input}`} place='top' />
 					<Handle
-						key={`input-${index}`}
 						type='target'
 						position={Position.Left}
-						id={`${id}-${input}`}
-						className='h-[10px] w-[10px] border-2 border-black bg-white'
+						id={`${id}_${input}`}
 						data-tooltip-id={`handle-tooltip-${input}`}
 						data-tooltip-content={input}
+						isConnectable={true}
 						style={{
 							top: getHandlePosition(index, handles.inputs.length),
+							width: '9px',
+							height: '9px',
+							borderRadius: '100%',
+							background: 'lightgray',
+							borderWidth: '2px',
+							borderColor: 'black',
 						}}
 					/>
-				</>
+				</div>
 			))}
 
 			{/* Node Content */}
@@ -57,7 +69,9 @@ const RootNode = ({
 					</h3>
 					<IoMdCloseCircleOutline
 						size={18}
-						className='hover:text-red-500 cursor-pointer'
+						className='hover:text-red-500 cursor-pointer transition-colors'
+						onClick={handleDelete}
+						title='Delete node'
 					/>
 				</div>
 				<div className='p-2'>{children}</div>
@@ -65,21 +79,26 @@ const RootNode = ({
 
 			{/* Output Handles */}
 			{handles.outputs.map((output, index) => (
-				<>
+				<div key={`output-${index}`}>
 					<Tooltip id={`handle-tooltip-${output}`} place='top' />
 					<Handle
-						key={`output-${index}`}
 						type='source'
 						position={Position.Right}
-						id={`${id}-${output}`}
-						className='h-[10px] w-[10px] border-2 border-black bg-white'
+						id={`${id}_${output}`}
 						data-tooltip-id={`handle-tooltip-${output}`}
 						data-tooltip-content={output}
+						isConnectable={true}
 						style={{
 							top: getHandlePosition(index, handles.outputs.length),
+							width: '9px',
+							height: '9px',
+							borderRadius: '100%',
+							background: 'lightgray',
+							borderWidth: '2px',
+							borderColor: 'black',
 						}}
 					/>
-				</>
+				</div>
 			))}
 		</div>
 	);

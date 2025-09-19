@@ -1,5 +1,3 @@
-// draggableNode.js
-
 import { nodeConfig } from '../config/nodeConfig';
 
 export const DraggableNode = ({ type, label }) => {

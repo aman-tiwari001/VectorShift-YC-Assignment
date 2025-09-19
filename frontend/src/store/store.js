@@ -1,5 +1,3 @@
-// store.js
-
 import { create } from 'zustand';
 import {
 	addEdge,
@@ -43,6 +41,10 @@ export const useStore = create((set, get) => ({
 					...connection,
 					type: 'smoothstep',
 					animated: true,
+					style: {
+						stroke: 'gray',
+						strokeWidth: 2,
+					},
 					markerEnd: { type: MarkerType.Arrow, height: '20px', width: '20px' },
 				},
 				get().edges
@@ -57,6 +59,21 @@ export const useStore = create((set, get) => ({
 				}
 				return node;
 			}),
+		});
+	},
+	deleteNode: (nodeId) => {
+		set({
+			nodes: get().nodes.filter((node) => node.id !== nodeId),
+			edges: get().edges.filter(
+				(edge) => edge.source !== nodeId && edge.target !== nodeId
+			),
+		});
+	},
+	clearCanvas: () => {
+		set({
+			nodes: [],
+			edges: [],
+			nodeIDs: {},
 		});
 	},
 }));

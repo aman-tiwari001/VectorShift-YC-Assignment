@@ -1,6 +1,7 @@
+import { nodeConfig } from '../config/nodeConfig';
 import { useStore } from '../store/store';
 
-const NodeFields = ({ nodeId, fields, data, setHandles }) => {
+const NodeFields = ({ nodeId, fields, data, type, setHandles }) => {
 	const updateNodeField = useStore((state) => state.updateNodeField);
 
 	const updateHandles = (value) => {
@@ -16,14 +17,16 @@ const NodeFields = ({ nodeId, fields, data, setHandles }) => {
 		// Create input handles for each variable if not already present
 		if (matches.length > 0) {
 			setHandles((prev) => ({
-				...prev,
-				inputs: Array.from(new Set([...prev.inputs, ...matches])),
+				outputs: nodeConfig[type]?.handles?.outputs || [],
+				inputs: Array.from(
+					new Set([...nodeConfig[type]?.handles?.inputs, ...matches])
+				),
 			}));
 		}
 	};
 
 	const handleFieldChange = (fieldName, value) => {
-    updateHandles(value);
+		updateHandles(value);
 		updateNodeField(nodeId, fieldName, value);
 	};
 
