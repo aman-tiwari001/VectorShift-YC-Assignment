@@ -3,6 +3,7 @@ import { IoText } from 'react-icons/io5';
 import { MdInput } from 'react-icons/md';
 import { MdOutput } from 'react-icons/md';
 import { LuBrainCircuit } from 'react-icons/lu';
+import { FiCode } from 'react-icons/fi';
 
 /* Note : To add new node types, simply add a new entry here in nodeConfig,
 	 it will automatically be picked up by the UI and toolbar */
@@ -101,6 +102,22 @@ export const nodeConfig = {
 				label: 'Text',
 				placeholder: 'Type "{{" to use variables',
 				defaultValue: '',
+			},
+		],
+	},
+
+	transform: {
+		title: 'Transform',
+		handles: { inputs: ['input'], outputs: ['output'] },
+		style: { background: '#f8e8ff' },
+		icon: <FiCode size={24} />,
+		fields: [
+			{
+				name: 'textName',
+				type: 'text',
+				label: 'Name',
+				placeholder: 'Enter name for this node',
+				defaultValue: (nodeId) => nodeId,
 			},
 		],
 	},

@@ -1,4 +1,6 @@
-import { FiGitPullRequest } from 'react-icons/fi';
+import {
+	FiGitPullRequest,
+} from 'react-icons/fi';
 import { MdClear } from 'react-icons/md';
 import { useStore } from '../store/store';
 import { shallow } from 'zustand/shallow';
@@ -26,9 +28,7 @@ export const SubmitButton = () => {
 	const handleSubmit = async () => {
 		try {
 			if (nodes.length === 0 || edges.length === 0) {
-				toast.error(
-					'Cannot submit an empty pipeline! Please add nodes.'
-				);
+				toast.error('Cannot submit an empty pipeline! Please add nodes.');
 				return;
 			}
 			setLoading(true);
@@ -64,6 +64,9 @@ export const SubmitButton = () => {
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
+
+			// Intentional delay
+			await new Promise((resolve) => setTimeout(resolve, 600));
 
 			toast.success('Pipeline submitted!');
 			const result = await response.json();
@@ -130,20 +133,20 @@ export const SubmitButton = () => {
 				showAlert && (
 					<Alert>
 						<div className='bg-gray-100 p-6 rounded-xl shadow-2xl max-w-md w-full'>
-							<h1 className='text-2xl font-extrabold text-gray-800 mb-4 text-center'>
-								Pipeline Analysis Results
+							<h1 className='text-2xl flex gap-1 items-center font-extrabold text-gray-800 mb-4 text-center'>
+								Pipeline Analysis Result
 							</h1>
 							<div className='space-y-2'>
 								<p className='text-lg text-gray-700'>
-									<span className='font-semibold'>Number of Nodes:</span>{' '}
+									<span className='font-semibold'>📌 Number of Nodes:</span>{' '}
 									{alertContent.numNodes}
 								</p>
 								<p className='text-lg text-gray-700'>
-									<span className='font-semibold'>Number of Edges:</span>{' '}
+									<span className='font-semibold'>📌 Number of Edges:</span>{' '}
 									{alertContent.numEdges}
 								</p>
 								<p className='text-lg text-gray-700'>
-									<span className='font-semibold'>Is Valid DAG:</span>{' '}
+									<span className='font-semibold'>📌 Is Valid DAG:</span>{' '}
 									{alertContent.isDAG}
 								</p>
 							</div>
