@@ -9,6 +9,10 @@
   <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 </div>
 
+#### 📺 Project Walkthrough Video : [View here](https://youtu.be/I5ujreS69RQ)
+
+<img width="1919" height="864" alt="image" src="https://github.com/user-attachments/assets/04b5c68d-6759-478f-ae4b-1052243c533a" />
+
 ---
 
 ## 🌟 Project Overview
